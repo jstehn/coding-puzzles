@@ -2,14 +2,13 @@
 # strings is 1 or less
 
 import unittest
-from collections import Counter
 
 
 def one_away(str1: str, str2: str) -> bool:
     """Returns True if the strings can be made equal by adding, removing, or
     replacing a character."""
     if len(str1) == len(str2):
-        # If true, there must be exactly 1 replacement.
+        # If true, there must be 0 or 1 replacement.
         return one_edit_replace(str1, str2)
     elif len(str1) + 1 == len(str2):
         # If true, there must be one character that needs to be added
@@ -17,16 +16,28 @@ def one_away(str1: str, str2: str) -> bool:
     elif len(str2) + 1 == len(str1):
         # If true, there must be one character that is subtracted.
         return one_edit_insert(str2, str1)
+    return False
 
 
 def one_edit_replace(str1: str, str2: str) -> bool:
     """Returns true if replacing one letter will make two strings the same."""
-    pass
+    return sum(str1[i] != str2[i] for i in range(len(str1))) <= 1
 
 
 def one_edit_insert(str1: str, str2: str) -> bool:
     """Returns true if adding one letter will make two strings the same."""
-    pass
+    edited = False
+    i, j = 0, 0
+    while i < len(str1) and j < len(str2):
+        if str1[i] != str2[j]:
+            if edited:
+                return False
+            edited = True
+            j += 1
+        else:
+            i += 1
+            j += 1
+    return True
 
 
 class Test(unittest.TestCase):
